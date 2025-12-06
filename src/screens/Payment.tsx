@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Support({ navigation }: any) {
+export default function Payment({ navigation }: any) {
   const handleNavTab = (screen: string) => {
     if (navigation && navigation.navigate) {
       navigation.navigate(screen);
@@ -20,52 +20,72 @@ export default function Support({ navigation }: any) {
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Support</Text>
+          <Text style={styles.headerTitle}>Payment Methods</Text>
         </View>
 
         {/* Content */}
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Contact Us</Text>
-            <TouchableOpacity style={styles.supportItem} activeOpacity={0.7}>
-              <Text style={styles.itemIcon}>📧</Text>
-              <View style={styles.itemContent}>
-                <Text style={styles.itemTitle}>Email Support</Text>
-                <Text style={styles.itemDesc}>support@transit.app</Text>
+            <Text style={styles.sectionTitle}>Payment Methods</Text>
+            <TouchableOpacity style={styles.paymentItem} activeOpacity={0.7}>
+              <View style={styles.paymentIcon}>
+                <Text>💳</Text>
               </View>
+              <View style={styles.paymentDetails}>
+                <Text style={styles.paymentMethod}>Visa Card</Text>
+                <Text style={styles.paymentInfo}>**** **** **** 1234</Text>
+              </View>
+              <Text style={styles.checkmark}>✓</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.supportItem} activeOpacity={0.7}>
-              <Text style={styles.itemIcon}>📞</Text>
-              <View style={styles.itemContent}>
-                <Text style={styles.itemTitle}>Phone Support</Text>
-                <Text style={styles.itemDesc}>1-800-TRANSIT</Text>
+            <TouchableOpacity style={styles.paymentItem} activeOpacity={0.7}>
+              <View style={styles.paymentIcon}>
+                <Text>📱</Text>
               </View>
+              <View style={styles.paymentDetails}>
+                <Text style={styles.paymentMethod}>Apple Pay</Text>
+                <Text style={styles.paymentInfo}>Not connected</Text>
+              </View>
+              <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.supportItem} activeOpacity={0.7}>
-              <Text style={styles.itemIcon}>💬</Text>
-              <View style={styles.itemContent}>
-                <Text style={styles.itemTitle}>Live Chat</Text>
-                <Text style={styles.itemDesc}>Available 24/7</Text>
+            <TouchableOpacity style={styles.paymentItem} activeOpacity={0.7}>
+              <View style={styles.paymentIcon}>
+                <Text>🏦</Text>
               </View>
+              <View style={styles.paymentDetails}>
+                <Text style={styles.paymentMethod}>Bank Transfer</Text>
+                <Text style={styles.paymentInfo}>Not connected</Text>
+              </View>
+              <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>FAQ</Text>
-            <TouchableOpacity style={styles.faqItem} activeOpacity={0.7}>
-              <Text style={styles.faqQuestion}>How do I buy a ticket?</Text>
-              <Text style={styles.faqArrow}>›</Text>
+            <TouchableOpacity
+              style={styles.addButton}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.addButtonText}>+ Add Payment Method</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.faqItem} activeOpacity={0.7}>
-              <Text style={styles.faqQuestion}>Can I refund my ticket?</Text>
-              <Text style={styles.faqArrow}>›</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.faqItem} activeOpacity={0.7}>
-              <Text style={styles.faqQuestion}>How to update my profile?</Text>
-              <Text style={styles.faqArrow}>›</Text>
-            </TouchableOpacity>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Recent Transactions</Text>
+            <View style={styles.transactionItem}>
+              <View>
+                <Text style={styles.transactionTitle}>Bus Ticket</Text>
+                <Text style={styles.transactionDate}>Dec 5, 2025</Text>
+              </View>
+              <Text style={styles.transactionAmount}>-$14.90</Text>
+            </View>
+            <View style={styles.transactionItem}>
+              <View>
+                <Text style={styles.transactionTitle}>Monthly Pass</Text>
+                <Text style={styles.transactionDate}>Dec 1, 2025</Text>
+              </View>
+              <Text style={styles.transactionAmount}>-$85.00</Text>
+            </View>
           </View>
         </ScrollView>
 
@@ -100,7 +120,7 @@ export default function Support({ navigation }: any) {
             <Text style={styles.navIcon}>🎫</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.navTab}
+            style={[styles.navTab, styles.navTabActive]}
             onPress={() => handleNavTab("Payment")}
             activeOpacity={0.7}
           >
@@ -143,7 +163,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textTransform: "uppercase",
   },
-  supportItem: {
+  paymentItem: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 12,
@@ -152,42 +172,71 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 8,
   },
-  itemIcon: {
-    fontSize: 20,
+  paymentIcon: {
+    fontSize: 24,
     marginRight: 12,
+    width: 32,
+    height: 32,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  itemContent: {
+  paymentDetails: {
     flex: 1,
   },
-  itemTitle: {
+  paymentMethod: {
     fontSize: 15,
     fontWeight: "600",
     color: "#111",
     marginBottom: 4,
   },
-  itemDesc: {
+  paymentInfo: {
     fontSize: 13,
     color: "#999",
   },
-  faqItem: {
-    flexDirection: "row",
+  checkmark: {
+    fontSize: 16,
+    color: "#4CAF50",
+  },
+  arrow: {
+    fontSize: 18,
+    color: "#999",
+  },
+  addButton: {
+    backgroundColor: "#E83B66",
+    borderRadius: 8,
+    paddingVertical: 12,
     alignItems: "center",
+    justifyContent: "center",
+  },
+  addButtonText: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#fff",
+  },
+  transactionItem: {
+    flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 14,
+    alignItems: "center",
+    paddingVertical: 12,
     paddingHorizontal: 12,
     backgroundColor: "#F5F5F5",
     borderRadius: 8,
     marginBottom: 8,
   },
-  faqQuestion: {
+  transactionTitle: {
     fontSize: 15,
-    fontWeight: "500",
+    fontWeight: "600",
     color: "#111",
-    flex: 1,
+    marginBottom: 4,
   },
-  faqArrow: {
-    fontSize: 18,
+  transactionDate: {
+    fontSize: 13,
     color: "#999",
+  },
+  transactionAmount: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#E83B66",
   },
   bottomNav: {
     flexDirection: "row",
@@ -206,6 +255,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#F5F5F5",
+  },
+  navTabActive: {
+    backgroundColor: "#0B1B7A",
   },
   navIcon: {
     fontSize: 20,

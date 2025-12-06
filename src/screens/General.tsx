@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function FAQ({ navigation, route }: any) {
-  const [isSolved, setIsSolved] = useState(false);
-  const question = route?.params?.question || "Sample question";
+export default function General({ navigation }: any) {
+  const [locationAccess, setLocationAccess] = React.useState(true);
+  const [autoNightMode, setAutoNightMode] = React.useState(true);
+  const [autoUpdate, setAutoUpdate] = React.useState(false);
 
   const handleNavTab = (screen: string) => {
     if (navigation && navigation.navigate) {
@@ -24,62 +26,66 @@ export default function FAQ({ navigation, route }: any) {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity 
-            onPress={() => navigation.navigate("Help")}
+            onPress={() => navigation.navigate("Settings")}
             style={styles.backButton}
           >
             <Text style={styles.backArrow}>‹</Text>
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{question}</Text>
+          <Text style={styles.headerTitle}>General</Text>
           <View style={{ width: 30 }} />
         </View>
 
         {/* Content */}
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <Text style={styles.answerLabel}>Sample question</Text>
-          <Text style={styles.answerText}>
-            This is the space where a question would go based on user experience problems or issues with the app
-          </Text>
-
-          <View style={styles.feedbackSection}>
-            <Text style={styles.feedbackLabel}>Did you manage to solve your problem?</Text>
-            
-            <View style={styles.buttonRow}>
-              <TouchableOpacity 
-                style={[
-                  styles.feedbackButton,
-                  isSolved === true && styles.feedbackButtonActive
-                ]}
-                activeOpacity={0.7}
-                onPress={() => setIsSolved(true)}
-              >
-                <Text style={[
-                  styles.feedbackButtonText,
-                  isSolved === true && styles.feedbackButtonTextActive
-                ]}>
-                  YES
-                </Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[
-                  styles.feedbackButton,
-                  isSolved === false && styles.feedbackButtonActive
-                ]}
-                activeOpacity={0.7}
-                onPress={() => setIsSolved(false)}
-              >
-                <Text style={[
-                  styles.feedbackButtonText,
-                  isSolved === false && styles.feedbackButtonTextActive
-                ]}>
-                  NO
-                </Text>
-              </TouchableOpacity>
+          <View style={styles.settingGroup}>
+            <View style={styles.settingRow}>
+              <Text style={styles.settingLabel}>Language</Text>
+              <Text style={styles.settingValue}>English</Text>
             </View>
           </View>
 
-          <TouchableOpacity style={styles.contactButton} activeOpacity={0.7}>
-            <Text style={styles.contactButtonText}>Contact with support</Text>
+          <View style={styles.settingGroup}>
+            <View style={styles.settingRow}>
+              <Text style={styles.settingLabel}>Location Access</Text>
+              <Switch
+                value={locationAccess}
+                onValueChange={setLocationAccess}
+                trackColor={{ false: "#E0E0E0", true: "#E83B66" }}
+                thumbColor={locationAccess ? "#E83B66" : "#fff"}
+              />
+            </View>
+          </View>
+
+          <View style={styles.settingGroup}>
+            <View style={styles.settingRow}>
+              <Text style={styles.settingLabel}>Auto-Night Mode</Text>
+              <Switch
+                value={autoNightMode}
+                onValueChange={setAutoNightMode}
+                trackColor={{ false: "#E0E0E0", true: "#E83B66" }}
+                thumbColor={autoNightMode ? "#E83B66" : "#fff"}
+              />
+            </View>
+          </View>
+
+          <View style={styles.settingGroup}>
+            <View style={styles.settingRow}>
+              <Text style={styles.settingLabel}>Auto update</Text>
+              <Switch
+                value={autoUpdate}
+                onValueChange={setAutoUpdate}
+                trackColor={{ false: "#E0E0E0", true: "#E83B66" }}
+                thumbColor={autoUpdate ? "#E83B66" : "#fff"}
+              />
+            </View>
+          </View>
+
+          <View style={styles.versionInfo}>
+            <Text style={styles.versionText}>v 15.0.89836.34</Text>
+          </View>
+
+          <TouchableOpacity style={styles.updateButton} activeOpacity={0.7}>
+            <Text style={styles.updateButtonText}>UPDATE</Text>
           </TouchableOpacity>
         </ScrollView>
 
@@ -155,73 +161,52 @@ const styles = StyleSheet.create({
     color: "#111",
     flex: 1,
     textAlign: "center",
-    marginHorizontal: 8,
   },
   content: {
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 20,
   },
-  answerLabel: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#111",
-    marginBottom: 12,
+  settingGroup: {
+    marginBottom: 20,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
   },
-  answerText: {
-    fontSize: 14,
-    fontWeight: "400",
+  settingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  settingLabel: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#111",
+  },
+  settingValue: {
+    fontSize: 15,
+    fontWeight: "500",
     color: "#666",
-    lineHeight: 20,
-    marginBottom: 32,
   },
-  feedbackSection: {
-    marginBottom: 32,
-  },
-  feedbackLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#111",
+  versionInfo: {
+    alignItems: "center",
+    marginTop: 20,
     marginBottom: 16,
   },
-  buttonRow: {
-    flexDirection: "row",
-    gap: 12,
-    justifyContent: "center",
+  versionText: {
+    fontSize: 13,
+    fontWeight: "400",
+    color: "#999",
   },
-  feedbackButton: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    borderColor: "#E0E0E0",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  feedbackButtonActive: {
-    backgroundColor: "#E83B66",
-    borderColor: "#E83B66",
-  },
-  feedbackButtonText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: "#666",
-    letterSpacing: 0.5,
-  },
-  feedbackButtonTextActive: {
-    color: "#fff",
-  },
-  contactButton: {
+  updateButton: {
     backgroundColor: "#E83B66",
     borderRadius: 24,
-    paddingVertical: 14,
+    paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: "center",
-    justifyContent: "center",
     marginBottom: 20,
   },
-  contactButtonText: {
+  updateButtonText: {
     fontSize: 14,
     fontWeight: "700",
     color: "#fff",

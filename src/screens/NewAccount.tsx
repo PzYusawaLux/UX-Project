@@ -13,60 +13,87 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Login({ navigation }: any) {
+export default function NewAccount({ navigation }: any) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [attemptCount, setAttemptCount] = useState(0);
 
-  const handleLogin = async () => {
-    if (!username.trim() || !password) {
-      Alert.alert("Error", "Please enter username and password");
-      return;
+  const validateInputs = () => {
+    if (!username.trim()) {
+      Alert.alert("Error", "Please enter a username");
+      return false;
     }
+    if (username.trim().length < 3) {
+      Alert.alert("Error", "Username must be at least 3 characters");
+      return false;
+    }
+    if (!password) {
+      Alert.alert("Error", "Please enter a password");
+      return false;
+    }
+    if (password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match");
+      return false;
+    }
+    return true;
+  };
+
+  const handleCreateAccount = async () => {
+    if (!validateInputs()) return;
 
     setLoading(true);
     try {
-      // Retrieve stored users from AsyncStorage
+      // Check if username already exists
       const existingUsers = await AsyncStorage.getItem("app_users");
       const users = existingUsers ? JSON.parse(existingUsers) : {};
 
-      // Check if username exists
-      if (!users[username.trim()]) {
-        setAttemptCount(attemptCount + 1);
-        Alert.alert("Error", "Username or password incorrect");
+      if (users[username.trim()]) {
+        Alert.alert("Account Exists", "This account already exists. Please log in.", [
+          {
+            text: "OK",
+            onPress: () => {
+              navigation.navigate("Login");
+            },
+          },
+        ]);
         setLoading(false);
         return;
       }
 
-      // Check if password matches
-      if (users[username.trim()].password !== password) {
-        setAttemptCount(attemptCount + 1);
-        Alert.alert("Error", "Username or password incorrect");
-        setLoading(false);
-        return;
-      }
+      // Store new user credentials
+      users[username.trim()] = {
+        password: password, // In production, this should be hashed
+        createdAt: new Date().toISOString(),
+      };
 
-      // Login successful
-      await AsyncStorage.setItem("app_current_user", username.trim());
-      setAttemptCount(0);
-      setUsername("");
-      setPassword("");
-      navigation.navigate("Home");
+      await AsyncStorage.setItem("app_users", JSON.stringify(users));
+      // Do NOT set app_current_user here - user needs to login first
+
+      Alert.alert("Success", "Account created successfully!", [
+        {
+          text: "OK",
+          onPress: () => {
+            navigation.navigate("Login");
+          },
+        },
+      ]);
     } catch (error) {
-      Alert.alert("Error", "Failed to login. Please try again.");
-      console.error("Login error:", error);
+      Alert.alert("Error", "Failed to create account. Please try again.");
+      console.error("Error creating account:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreateAccount = () => {
-    navigation.navigate("NewAccount");
-  };
-
-  const handleForgotPassword = () => {
-    navigation.navigate("ForgotPassword");
+  const handleCancel = () => {
+    if (navigation && navigation.navigate) {
+      navigation.navigate("Login");
+    }
   };
 
   return (
@@ -78,7 +105,7 @@ export default function Login({ navigation }: any) {
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
             <View style={styles.logo} />
-            <Text style={styles.logoText}>Login account</Text>
+            <Text style={styles.logoText}>Create new account</Text>
           </View>
 
           <View style={styles.form}>
@@ -110,40 +137,41 @@ export default function Login({ navigation }: any) {
               />
             </View>
 
+            <View style={styles.inputGroup}>
+              <Text style={styles.label}>Confirm Password</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm password"
+                placeholderTextColor="#999"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry
+                editable={!loading}
+                autoCapitalize="none"
+              />
+            </View>
+
             <TouchableOpacity
-              style={[styles.loginButton, loading && styles.buttonDisabled]}
-              onPress={handleLogin}
+              style={[styles.createButton, loading && styles.buttonDisabled]}
+              onPress={handleCreateAccount}
               disabled={loading}
               activeOpacity={0.8}
               accessibilityRole="button"
-              accessibilityLabel="Login"
-              testID="login-button"
+              accessibilityLabel="Create account"
+              testID="newaccount-create"
             >
-              <Text style={styles.loginButtonText}>{loading ? "Logging in..." : "Continue"}</Text>
+              <Text style={styles.createButtonText}>{loading ? "Creating..." : "Continue"}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.forgotPasswordLink}
-              onPress={handleForgotPassword}
-              disabled={loading}
+              style={styles.cancelLink}
+              onPress={handleCancel}
+              activeOpacity={0.7}
               accessibilityRole="button"
-              accessibilityLabel="Forgot password"
-              testID="login-forgot"
+              accessibilityLabel="Already have account"
+              testID="newaccount-login-link"
             >
-              <Text style={styles.forgotPasswordLinkText}>Forgot password?</Text>
-            </TouchableOpacity>
-
-            <View style={styles.divider} />
-
-            <TouchableOpacity
-              style={styles.signupLink}
-              onPress={handleCreateAccount}
-              disabled={loading}
-              accessibilityRole="button"
-              accessibilityLabel="Create new account"
-              testID="login-signup"
-            >
-              <Text style={styles.signupLinkText}>Create new account</Text>
+              <Text style={styles.cancelLinkText}>Already have account</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -197,7 +225,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#111",
   },
-  loginButton: {
+  createButton: {
     backgroundColor: "#E83B66",
     borderRadius: 24,
     paddingVertical: 14,
@@ -205,7 +233,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  loginButtonText: {
+  createButtonText: {
     fontSize: 16,
     fontWeight: "700",
     color: "#fff",
@@ -213,26 +241,13 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.6,
   },
-  forgotPasswordLink: {
+  cancelLink: {
     alignItems: "center",
-    marginTop: 16,
+    marginTop: 20,
   },
-  forgotPasswordLinkText: {
-    fontSize: 14,
-    color: "#E83B66",
-  },
-  divider: {
-    height: 1,
-    backgroundColor: "#E0E0E0",
-    marginVertical: 20,
-  },
-  signupLink: {
-    alignItems: "center",
-  },
-  signupLinkText: {
+  cancelLinkText: {
     fontSize: 14,
     color: "#666",
     textDecorationLine: "underline",
   },
 });
-
