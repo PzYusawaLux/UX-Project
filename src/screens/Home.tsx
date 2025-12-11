@@ -14,18 +14,62 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LOCATION_DATA = [
   {
-    id: "1",
+    id: "4",
     name: "Carnegie Museum of Art",
+    address: "4400 Forbes Ave, Pittsburgh, PA 15213",
     distance: "4.1 mi",
     liked: false,
     image: require("../../assets/Carnegie Museum.jpg"),
+    imageKey: "carnegie-museum",
+    lines: [
+      {
+        id: "56",
+        name: "56",
+        destination: "Downtown",
+        color: "#4CAF50",
+      },
+      {
+        id: "71",
+        name: "71",
+        destination: "North Hills",
+        color: "#9C27B0",
+      },
+      {
+        id: "P7",
+        name: "P7",
+        destination: "Airport",
+        color: "#FF9800",
+      },
+    ],
   },
   {
-    id: "2",
+    id: "5",
     name: "Phipps Conservatory",
+    address: "1 Schenley Park, Pittsburgh, PA 15213",
     distance: "3.5 mi",
     liked: false,
     image: require("../../assets/Phipps Conservatory.jpg"),
+    imageKey: "phipps-conservatory",
+    lines: [
+      {
+        id: "40",
+        name: "40",
+        destination: "South Hills",
+        color: "#E83B66",
+      },
+      {
+        id: "67",
+        name: "67",
+        destination: "East End",
+        color: "#2196F3",
+      },
+      {
+        id: "68",
+        name: "68",
+        destination: "Shadyside",
+        color: "#00BCD4",
+      },
+    ],
   },
 ];
 
@@ -68,33 +112,45 @@ export default function Home({ navigation }: any) {
     }
   };
 
+  const handleLocationCardPress = (location: any) => {
+    if (navigation && navigation.navigate) {
+      const locationId = String(location.id);
+      navigation.navigate("StationScreen", { station: { id: locationId } });
+    }
+  };
+
   const renderLocationCard = ({ item, index }: any) => (
-    <View style={[styles.locationCard, index === locations.length - 1 && { marginBottom: 0 }]}>
-      <View style={[styles.imageContainer, { backgroundColor: item.id === "1" ? "#90EE90" : "#87CEEB" }]}>
-        {item.image ? (
-          <Image
-            source={item.image}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        ) : (
-          <View style={styles.placeholderImage} />
-        )}
-        <TouchableOpacity
-          style={styles.likeButton}
-          onPress={() => toggleLike(item.id)}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.likeIcon, item.liked && styles.likeIconActive]}>
-            ♥
-          </Text>
-        </TouchableOpacity>
+    <TouchableOpacity 
+      onPress={() => handleLocationCardPress(item)}
+      activeOpacity={0.8}
+    >
+      <View style={[styles.locationCard, index === locations.length - 1 && { marginBottom: 0 }]}>
+        <View style={[styles.imageContainer, { backgroundColor: item.id === "4" ? "#90EE90" : "#87CEEB" }]}>
+          {item.image ? (
+            <Image
+              source={item.image}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={styles.placeholderImage} />
+          )}
+          <TouchableOpacity
+            style={styles.likeButton}
+            onPress={() => toggleLike(item.id)}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.likeIcon, item.liked && styles.likeIconActive]}>
+              ♥
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.locationInfo}>
+          <Text style={styles.locationName}>{item.name}</Text>
+          <Text style={styles.locationDistance}>{item.distance}</Text>
+        </View>
       </View>
-      <View style={styles.locationInfo}>
-        <Text style={styles.locationName}>{item.name}</Text>
-        <Text style={styles.locationDistance}>{item.distance}</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -271,49 +327,59 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal: 16,
     marginTop: 20,
-    marginBottom: 20,
+    marginBottom: 16,
     alignItems: "center",
     gap: 8,
   },
   searchInput: {
     flex: 1,
-    borderRadius: 20,
-    paddingHorizontal: 16,
+    borderRadius: 24,
+    paddingHorizontal: 18,
     paddingVertical: 12,
-    fontSize: 14,
+    fontSize: 15,
     backgroundColor: "#F5F5F5",
     borderWidth: 1,
     borderColor: "#E0E0E0",
   },
   searchButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "#E0E0E0",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
   },
   searchIcon: {
-    fontSize: 18,
+    fontSize: 20,
   },
   tabContainer: {
     flexDirection: "row",
     marginHorizontal: 16,
-    marginBottom: 16,
-    gap: 16,
+    marginBottom: 12,
+    gap: 12,
   },
   tabButton: {
-    paddingHorizontal: 20,
-    paddingVertical: 8,
-    borderRadius: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 10,
     backgroundColor: "#F5F5F5",
   },
   tabButtonActive: {
     backgroundColor: "#fff",
     borderWidth: 1,
     borderColor: "#E0E0E0",
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
   },
   tabText: {
     fontSize: 14,
@@ -326,19 +392,26 @@ const styles = StyleSheet.create({
   locationsList: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingTop: 4,
+    paddingBottom: 12,
   },
   flatListContent: {
-    paddingBottom: 0,
+    paddingBottom: 24,
   },
   locationCard: {
-    marginBottom: 16,
-    borderRadius: 12,
+    marginBottom: 20,
+    borderRadius: 16,
     overflow: "hidden",
     backgroundColor: "#F9F9F9",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
   },
   imageContainer: {
     position: "relative",
-    height: 160,
+    height: 200,
     backgroundColor: "#E0E0E0",
   },
   image: {
@@ -373,38 +446,38 @@ const styles = StyleSheet.create({
     color: "#E83B66",
   },
   locationInfo: {
-    padding: 12,
+    padding: 14,
   },
   locationName: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: "700",
     color: "#111",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   locationDistance: {
     fontSize: 13,
-    color: "#666",
+    color: "#888",
   },
   bottomNav: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingVertical: 12,
-    paddingBottom: 20,
+    paddingVertical: 14,
+    paddingBottom: 22,
     borderTopWidth: 1,
-    borderTopColor: "#E0E0E0",
+    borderTopColor: "#E8E8E8",
     backgroundColor: "#fff",
   },
   navButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F0F0F5",
   },
   navIcon: {
-    fontSize: 20,
+    fontSize: 22,
   },
 });
 

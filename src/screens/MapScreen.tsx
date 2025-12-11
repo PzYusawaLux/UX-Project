@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView as RNSafeAreaView,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,24 +13,26 @@ const LOCATIONS = [
   {
     id: "1",
     name: "Centre Ave + Crawford Bus Stop",
-    coordinates: { x: 35, y: 45 },
+    coordinates: { x: 65, y: 60 },
   },
   {
     id: "2",
-    name: "Centre Ave + Craig St",
-    coordinates: { x: 55, y: 35 },
+    name: "Seventh Ave + Smithfield St",
+    coordinates: { x: 35, y: 45 },
   },
   {
     id: "3",
-    name: "Fifth Ave Station",
-    coordinates: { x: 65, y: 60 },
+    name: "Liberty Ave + William Penn",
+    coordinates: { x: 55, y: 35 },
   },
 ];
+
+const MAP_IMAGE = require("../../assets/Downtown Map.jpg");
 
 export default function MapScreen({ navigation }: any) {
   const handleLocationPress = (location: any) => {
     if (navigation && navigation.navigate) {
-      navigation.navigate("StationScreen", { station: location });
+      navigation.navigate("StationScreen", { station: { id: location.id } });
     }
   };
 
@@ -59,9 +62,10 @@ export default function MapScreen({ navigation }: any) {
 
         {/* Map Area - Placeholder */}
         <View style={styles.mapContainer}>
-          <View style={styles.mapPlaceholder}>
-            <Text style={styles.mapText}>Map View</Text>
-          </View>
+          <Image
+            source={MAP_IMAGE}
+            style={styles.mapImage}
+          />
 
           {/* Location Markers */}
           {LOCATIONS.map((location) => (
@@ -156,18 +160,10 @@ const styles = StyleSheet.create({
     position: "relative",
     overflow: "hidden",
   },
-  mapPlaceholder: {
-    flex: 1,
-    backgroundColor: "#E8E8F0",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 12,
-    margin: 12,
-  },
-  mapText: {
-    fontSize: 16,
-    color: "#999",
-    fontWeight: "600",
+  mapImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   marker: {
     position: "absolute",
@@ -199,25 +195,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingVertical: 12,
-    paddingBottom: 20,
+    paddingVertical: 14,
+    paddingBottom: 22,
     borderTopWidth: 1,
-    borderTopColor: "#E0E0E0",
+    borderTopColor: "#E8E8E8",
     backgroundColor: "#fff",
   },
   navTab: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F0F0F5",
   },
   navTabActive: {
     backgroundColor: "#0B1B7A",
   },
   navIcon: {
-    fontSize: 20,
+    fontSize: 22,
   },
 });
 

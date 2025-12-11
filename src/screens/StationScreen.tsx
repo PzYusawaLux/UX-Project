@@ -5,12 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const STATION_DATA = {
   name: "Centre Ave + Crawford Bus Stop",
   address: "Centre Ave + Crawford, 15219, Pittsburgh",
+  image: "crawford-stop",
   lines: [
     {
       id: "82",
@@ -33,9 +35,152 @@ const STATION_DATA = {
   ],
 };
 
+const STATION_IMAGES: any = {
+  "crawford-stop": require("../../assets/Crawford Stop.jpg"),
+  "smithfield-st": require("../../assets/Smithfield.jpg"),
+  "william-penn": require("../../assets/Liberty Avenue.jpg"),
+  "carnegie-museum": require("../../assets/Carnegie Museum.jpg"),
+  "phipps-conservatory": require("../../assets/Phipps Conservatory.jpg"),
+};
+
+const ALL_STATIONS: any = {
+  "1": {
+    id: "1",
+    name: "Centre Ave + Crawford Bus Stop",
+    address: "Centre Ave + Crawford, 15219, Pittsburgh",
+    image: "crawford-stop",
+    lines: [
+      {
+        id: "82",
+        name: "82",
+        destination: "Craig St",
+        color: "#4CAF50",
+      },
+      {
+        id: "83",
+        name: "83",
+        destination: "Liberty Ave",
+        color: "#E83B66",
+      },
+      {
+        id: "101",
+        name: "101",
+        destination: "Downtown Station",
+        color: "#2196F3",
+      },
+    ],
+  },
+  "2": {
+    id: "2",
+    name: "Seventh Ave + Smithfield St",
+    address: "Seventh Ave + Smithfield St, 15219, Pittsburgh",
+    image: "smithfield-st",
+    lines: [
+      {
+        id: "71",
+        name: "71",
+        destination: "North Hills",
+        color: "#9C27B0",
+      },
+      {
+        id: "61C",
+        name: "61C",
+        destination: "Penn Circle",
+        color: "#FF9800",
+      },
+      {
+        id: "P1",
+        name: "P1",
+        destination: "Airport",
+        color: "#00BCD4",
+      },
+    ],
+  },
+  "3": {
+    id: "3",
+    name: "Liberty Ave + William Penn",
+    address: "Liberty Ave + William Penn, 15219, Pittsburgh",
+    image: "william-penn",
+    lines: [
+      {
+        id: "1",
+        name: "1",
+        destination: "North Shore",
+        color: "#4CAF50",
+      },
+      {
+        id: "2",
+        name: "2",
+        destination: "South Hills",
+        color: "#E83B66",
+      },
+      {
+        id: "J2",
+        name: "J2",
+        destination: "Oakland",
+        color: "#2196F3",
+      },
+    ],
+  },
+  "4": {
+    id: "4",
+    name: "Carnegie Museum of Art",
+    address: "4400 Forbes Ave, Pittsburgh, PA 15213",
+    image: "carnegie-museum",
+    lines: [
+      {
+        id: "56",
+        name: "56",
+        destination: "Downtown",
+        color: "#4CAF50",
+      },
+      {
+        id: "71",
+        name: "71",
+        destination: "North Hills",
+        color: "#9C27B0",
+      },
+      {
+        id: "P7",
+        name: "P7",
+        destination: "Airport",
+        color: "#FF9800",
+      },
+    ],
+  },
+  "5": {
+    id: "5",
+    name: "Phipps Conservatory",
+    address: "1 Schenley Park, Pittsburgh, PA 15213",
+    image: "phipps-conservatory",
+    lines: [
+      {
+        id: "40",
+        name: "40",
+        destination: "South Hills",
+        color: "#E83B66",
+      },
+      {
+        id: "67",
+        name: "67",
+        destination: "East End",
+        color: "#2196F3",
+      },
+      {
+        id: "68",
+        name: "68",
+        destination: "Shadyside",
+        color: "#00BCD4",
+      },
+    ],
+  },
+};
+
 export default function StationScreen({ navigation, route }: any) {
   const stationParam = route?.params?.station;
-  const station = stationParam?.lines ? stationParam : STATION_DATA;
+  // Ensure stationId is always a string for object key lookup
+  const stationId = String(stationParam?.id ?? "1");
+  const station = ALL_STATIONS[stationId] || ALL_STATIONS["1"] || STATION_DATA;
 
   const handleBack = () => {
     if (navigation && navigation.goBack) {
@@ -57,6 +202,14 @@ export default function StationScreen({ navigation, route }: any) {
 
         {/* Content */}
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          {/* Station Image */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={STATION_IMAGES[station.image]}
+              style={styles.stationImage}
+            />
+          </View>
+
           {/* Station Info */}
           <View style={styles.stationInfo}>
             <Text style={styles.stationName}>{station.name}</Text>
@@ -81,8 +234,8 @@ export default function StationScreen({ navigation, route }: any) {
                   <Text style={styles.lineBadgeText}>{line.id}</Text>
                 </View>
               ))}
-              <View style={styles.alertIcon}>
-                <Text>⚠️</Text>
+              <View style={styles.delayAlert}>
+                <Text style={styles.delayAlertText}>LATE</Text>
               </View>
             </View>
 
@@ -99,8 +252,8 @@ export default function StationScreen({ navigation, route }: any) {
                   <Text style={styles.lineBadgeText}>{line.id}</Text>
                 </View>
               ))}
-              <View style={styles.alertIcon}>
-                <Text>🔔</Text>
+              <View style={styles.onTimeAlert}>
+                <Text style={styles.onTimeAlertText}>✓</Text>
               </View>
             </View>
 
@@ -173,11 +326,24 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 20,
+    paddingHorizontal: 0,
+    paddingTop: 0,
+  },
+  imageContainer: {
+    width: "100%",
+    height: 200,
+    backgroundColor: "#E0E0E0",
+    marginBottom: 20,
+  },
+  stationImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   stationInfo: {
     marginBottom: 24,
+    paddingHorizontal: 16,
+    paddingTop: 20,
   },
   stationName: {
     fontSize: 20,
@@ -200,30 +366,38 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 24,
+    paddingHorizontal: 16,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "700",
-    color: "#111",
+    color: "#888",
     marginBottom: 12,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   departureTime: {
     fontSize: 14,
     fontWeight: "600",
     color: "#111",
-    marginBottom: 8,
+    marginBottom: 10,
   },
   timeSlot: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
-    marginBottom: 12,
+    gap: 10,
+    marginBottom: 16,
     flexWrap: "wrap",
   },
   lineBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 18,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   lineBadgeText: {
     fontSize: 13,
@@ -232,31 +406,70 @@ const styles = StyleSheet.create({
   },
   alertIcon: {
     fontSize: 18,
-    marginLeft: 8,
+    marginLeft: 4,
+  },
+  delayAlert: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: "#D32F2F",
+    borderRadius: 4,
+    marginLeft: 6,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 2,
+    shadowColor: "#D32F2F",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  delayAlertText: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#fff",
+    letterSpacing: 0.5,
+  },
+  onTimeAlert: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#4CAF50",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: 6,
+    elevation: 2,
+    shadowColor: "#4CAF50",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  onTimeAlertText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#fff",
   },
   bottomNav: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingVertical: 12,
-    paddingBottom: 20,
+    paddingVertical: 14,
+    paddingBottom: 22,
     borderTopWidth: 1,
-    borderTopColor: "#E0E0E0",
+    borderTopColor: "#E8E8E8",
     backgroundColor: "#fff",
   },
   navTab: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F0F0F5",
   },
   navTabActive: {
     backgroundColor: "#0B1B7A",
   },
   navIcon: {
-    fontSize: 20,
+    fontSize: 22,
   },
 });
 
