@@ -11,6 +11,7 @@ import ForgotPassword from "../screens/ForgotPassword";
 import Home from "../screens/Home";
 import Search from "../screens/Search";
 import YourRoute from "../screens/YourRoute";
+import RouteSimulation from "../screens/RouteSimulation";
 import TicketDetails from "../screens/TicketDetails";
 import TicketCancel from "../screens/TicketCancel";
 import MapScreen from "../screens/MapScreen";
@@ -42,6 +43,7 @@ export default function MainStack() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="YourRoute" component={YourRoute} />
+      <Stack.Screen name="RouteSimulation" component={RouteSimulation} />
       <Stack.Screen name="TicketDetails" component={TicketDetails} />
       <Stack.Screen name="TicketCancel" component={TicketCancel} />
 

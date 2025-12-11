@@ -7,8 +7,20 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Payment({ navigation }: any) {
+  const handleCompletePayment = async () => {
+    try {
+      await AsyncStorage.setItem("ticketPurchased", "true");
+      if (navigation && navigation.navigate) {
+        navigation.navigate("TicketDetails");
+      }
+    } catch (error) {
+      console.log("Error saving ticket status:", error);
+    }
+  };
+
   const handleNavTab = (screen: string) => {
     if (navigation && navigation.navigate) {
       navigation.navigate(screen);
@@ -86,6 +98,16 @@ export default function Payment({ navigation }: any) {
               </View>
               <Text style={styles.transactionAmount}>-$85.00</Text>
             </View>
+          </View>
+
+          <View style={styles.section}>
+            <TouchableOpacity
+              style={styles.completePaymentButton}
+              onPress={handleCompletePayment}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.completePaymentButtonText}>Complete Payment</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
 
@@ -212,6 +234,24 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: "#fff",
+  },
+  completePaymentButton: {
+    backgroundColor: "#0B1B7A",
+    borderRadius: 20,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3,
+    shadowColor: "#0B1B7A",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+  },
+  completePaymentButtonText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#fff",
+    letterSpacing: 0.3,
   },
   transactionItem: {
     flexDirection: "row",

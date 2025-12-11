@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TICKETS_LIST = [
   {
@@ -20,6 +21,7 @@ const TICKETS_LIST = [
     price: 14.9,
     paid: true,
     paymentStatus: "Paid",
+    requiresPurchase: true,
   },
   {
     id: "2",
@@ -32,6 +34,7 @@ const TICKETS_LIST = [
     price: 7.4,
     paid: true,
     paymentStatus: "Paid",
+    requiresPurchase: false,
   },
   {
     id: "3",
@@ -44,11 +47,35 @@ const TICKETS_LIST = [
     price: null,
     paid: true,
     paymentStatus: "Paid",
+    requiresPurchase: false,
   },
 ];
 
 export default function TicketDetails({ navigation }: any) {
   const [sortBy, setSortBy] = useState("LATEST");
+  const [hasTicketPurchased, setHasTicketPurchased] = useState(false);
+
+  const loadTicketPurchaseStatus = async () => {
+    try {
+      const purchased = await AsyncStorage.getItem("ticketPurchased");
+      setHasTicketPurchased(purchased === "true");
+    } catch (error) {
+      console.log("Error loading ticket status:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadTicketPurchaseStatus();
+  }, []);
+
+  const useFocusEffect = React.useCallback(() => {
+    loadTicketPurchaseStatus();
+  }, []);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation?.addListener("focus", useFocusEffect);
+    return unsubscribe;
+  }, [navigation, useFocusEffect]);
 
   const handleAddNew = () => {
     if (navigation && navigation.navigate) {
@@ -72,8 +99,14 @@ export default function TicketDetails({ navigation }: any) {
     return "#999";
   };
 
-  const renderTicketItem = (ticket: any) => (
-    <View key={ticket.id} style={styles.ticketCard}>
+  const renderTicketItem = (ticket: any) => {
+    // 只有在购票后才显示需要购票的ticket
+    if (ticket.requiresPurchase && !hasTicketPurchased) {
+      return null;
+    }
+
+    return (
+      <View key={ticket.id} style={styles.ticketCard}>
       <View style={styles.ticketHeader}>
         <View>
           <Text style={styles.ticketDate}>{ticket.date}</Text>
@@ -120,7 +153,8 @@ export default function TicketDetails({ navigation }: any) {
         </View>
       </View>
     </View>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safe}>

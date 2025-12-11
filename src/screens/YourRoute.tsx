@@ -8,31 +8,47 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ROUTE_DATA = {
   id: "1",
   startLocation: "Cityview Apartment",
   startAddress: "1420 Centre Ave., 15219, Pittsburgh",
   startDistance: "105 ft",
-  endLocation: "Centre Ave + Crawford",
-  endAddress: "Centre Ave + Crawford, 15219, Pittsburgh",
-  endDistance: "5.3 mi",
   price: 14.9,
   status: "unpaid",
-  lines: [
+  stops: [
     {
-      id: "82",
-      name: "Centre Ave + Crawford",
-      distance: "5.3 mi",
-      status: "on-time",
-      color: "#4CAF50",
+      id: "1",
+      type: "start",
+      location: "Cityview Apartment",
+      address: "1420 Centre Ave., 15219, Pittsburgh",
+      distance: "105 ft",
+      icon: "🚶",
     },
     {
-      id: "71A",
-      name: "Centre Ave + Craig St",
-      distance: "1.3 mi",
+      id: "2",
+      type: "transit",
+      lineId: "82",
+      lineName: "B2",
+      location: "Centre Ave + Crawford",
+      address: "Centre Ave + Crawford, 15219, Pittsburgh",
+      distance: "5.3 mi",
+      color: "#4CAF50",
+      icon: "🚌",
       status: "on-time",
+    },
+    {
+      id: "3",
+      type: "transit",
+      lineId: "71A",
+      lineName: "71A",
+      location: "Centre Ave + Craig St",
+      address: "Centre Ave + Craig St, 15213, Pittsburgh",
+      distance: "1.3 mi",
       color: "#9C27B0",
+      icon: "🚌",
+      status: "on-time",
     },
   ],
 };
@@ -41,10 +57,16 @@ export default function YourRoute({ navigation, route }: any) {
   const [routeData, setRouteData] = useState(ROUTE_DATA);
   const [showCancelModal, setShowCancelModal] = useState(false);
 
-  const handleBuyTickets = () => {
-    // Navigate to TicketDetails with payment flow
-    if (navigation && navigation.navigate) {
-      navigation.navigate("TicketDetails", { route: routeData });
+  const handleBuyTickets = async () => {
+    try {
+      // Save purchase status
+      await AsyncStorage.setItem("ticketPurchased", "true");
+      // Navigate to TicketDetails
+      if (navigation && navigation.navigate) {
+        navigation.navigate("TicketDetails", { route: routeData });
+      }
+    } catch (error) {
+      console.log("Error saving purchase status:", error);
     }
   };
 
@@ -62,7 +84,7 @@ export default function YourRoute({ navigation, route }: any) {
 
   const handleMapRoute = () => {
     if (navigation && navigation.navigate) {
-      navigation.navigate("MapScreen");
+      navigation.navigate("RouteSimulation", { route: routeData });
     }
   };
 
@@ -100,69 +122,45 @@ export default function YourRoute({ navigation, route }: any) {
             </TouchableOpacity>
           </View>
 
-          {/* Start Location */}
-          <View style={styles.locationSection}>
-            <View style={styles.locationIcon}>
-              <Text style={styles.iconText}>🚶</Text>
-            </View>
-            <View style={styles.locationDetails}>
-              <Text style={styles.distanceLabel}>{routeData.startDistance}</Text>
-              <Text style={styles.locationName}>{routeData.startLocation}</Text>
-              <Text style={styles.locationAddress}>
-                {routeData.startAddress}
-              </Text>
-            </View>
-          </View>
+          {/* Route Stops */}
+          {routeData.stops.map((stop, index) => (
+            <View key={stop.id}>
+              {/* Line Separator (not for first stop) */}
+              {index > 0 && (
+                <View style={styles.lineSeparator}>
+                  <View style={styles.verticalLine} />
+                </View>
+              )}
 
-          {/* Route Lines */}
-          {routeData.lines.map((line, index) => (
-            <View key={line.id}>
-              {/* Line Separator */}
-              <View style={styles.lineSeparator}>
-                <View style={styles.verticalLine} />
-              </View>
-
-              {/* Transit Line */}
-              <View style={styles.transitSection}>
+              {/* Stop Item */}
+              <View style={styles.locationSection}>
                 <View
                   style={[
-                    styles.transitIcon,
-                    { backgroundColor: line.color },
+                    styles.locationIcon,
+                    stop.type === "transit" && {
+                      backgroundColor: stop.color,
+                    },
                   ]}
                 >
-                  <Text style={styles.transitIconText}>🚌</Text>
+                  <Text style={styles.iconText}>{stop.icon}</Text>
                 </View>
-                <View style={styles.transitDetails}>
-                  <View style={styles.lineHeader}>
-                    <Text style={styles.lineName}>{line.id}</Text>
-                    <Text style={styles.lineStatus}>{line.status}</Text>
-                  </View>
-                  <Text style={styles.transitName}>{line.name}</Text>
-                  <Text style={styles.transitAddress}>
-                    {line.distance}
+                <View style={styles.locationDetails}>
+                  <Text style={styles.distanceLabel}>{stop.distance}</Text>
+                  <Text style={styles.locationName}>{stop.location}</Text>
+                  <Text style={styles.locationAddress}>
+                    {stop.address}
                   </Text>
+                  {stop.type === "transit" && (
+                    <View style={styles.lineTag}>
+                      <Text style={[styles.lineTagText, { backgroundColor: stop.color }]}>
+                        {stop.lineName}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               </View>
             </View>
           ))}
-
-          {/* End Location */}
-          <View style={styles.lineSeparator}>
-            <View style={styles.verticalLine} />
-          </View>
-
-          <View style={styles.locationSection}>
-            <View style={styles.endLocationIcon}>
-              <Text style={styles.endIconText}>📍</Text>
-            </View>
-            <View style={styles.locationDetails}>
-              <Text style={styles.distanceLabel}>{routeData.endDistance}</Text>
-              <Text style={styles.locationName}>{routeData.endLocation}</Text>
-              <Text style={styles.locationAddress}>
-                {routeData.endAddress}
-              </Text>
-            </View>
-          </View>
 
           {/* Route on Map Button */}
           <TouchableOpacity
@@ -379,6 +377,18 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#999",
     lineHeight: 16,
+  },
+  lineTag: {
+    marginTop: 8,
+    flexDirection: "row",
+  },
+  lineTagText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#fff",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 4,
   },
   lineSeparator: {
     flexDirection: "row",

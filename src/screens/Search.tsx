@@ -15,7 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SEARCH_RESULTS = [
   { id: "1", name: "Cityview Apartment, Pittsburgh", distance: "7.2 mi", liked: false },
-  { id: "2", name: "Larence Hall, Pittsburgh", distance: "8.3 mi", liked: false },
+  { id: "2", name: "Lawrence Hall, Pittsburgh", distance: "8.3 mi", liked: false },
   { id: "3", name: "Giant Eagle, Pittsburgh", distance: "3.6 mi", liked: false },
   { id: "4", name: "Pittsburgh International Airport (PIT), Pittsburgh", distance: "22.7 mi", liked: false },
 ];
