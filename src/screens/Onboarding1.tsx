@@ -18,10 +18,15 @@ export default function Onboarding1({ navigation }: any) {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
+        {/* Background decorative shapes */}
+        <View style={styles.topDecor} />
+        <View style={styles.bottomDecor} />
+
         <View style={styles.content}>
-          <View style={styles.logo} accessible accessibilityLabel="App logo" />
+          <View style={styles.logo}>
+            <Text style={styles.logoArrow}>▲</Text>
+          </View>
           <Text style={styles.title}>Track the bus</Text>
-          <Text style={styles.subtitle}>Real-time location and ETA updates</Text>
         </View>
 
         <TouchableOpacity
@@ -32,7 +37,7 @@ export default function Onboarding1({ navigation }: any) {
           accessibilityLabel="Next"
           testID="onboarding1-next"
         >
-          <Text style={styles.nextIcon}>›</Text>
+          <Text style={styles.nextIcon}>→</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -40,30 +45,61 @@ export default function Onboarding1({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#fff" },
-  container: { flex: 1, backgroundColor: "#fff", overflow: "hidden" },
+  safe: { flex: 1, backgroundColor: "#E83B66" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#E83B66",
+    overflow: "hidden",
+    position: "relative",
+  },
+  topDecor: {
+    position: "absolute",
+    top: -60,
+    right: -60,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: "#0B1B7A",
+  },
+  bottomDecor: {
+    position: "absolute",
+    bottom: -80,
+    left: -80,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
+    backgroundColor: "#0B1B7A",
+  },
   content: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 32,
+    zIndex: 1,
   },
   logo: {
     width: 24,
     height: 24,
     borderRadius: 6,
-    backgroundColor: "#111",
+    backgroundColor: "#fff",
     marginBottom: 22,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoArrow: {
+    fontSize: 12,
+    color: "#E83B66",
+    fontWeight: "700",
   },
   title: {
-    color: "#111",
-    fontSize: 30,
+    color: "#fff",
+    fontSize: 36,
     fontWeight: "800",
     textAlign: "center",
     marginBottom: 8,
   },
   subtitle: {
-    color: "#666",
+    color: "#fff",
     fontSize: 15,
     textAlign: "center",
     paddingHorizontal: 6,
@@ -79,10 +115,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.12,
     shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
-    elevation: 4,
+    shadowRadius: 12,
+    elevation: 5,
+    zIndex: 2,
   },
-  nextIcon: { fontSize: 30, color: "#111", lineHeight: 32 },
+  nextIcon: { fontSize: 28, color: "#E83B66", lineHeight: 32, fontWeight: "600" },
 });

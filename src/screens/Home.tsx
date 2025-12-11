@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,12 +18,14 @@ const LOCATION_DATA = [
     name: "Carnegie Museum of Art",
     distance: "4.1 mi",
     liked: false,
+    image: require("../../assets/Carnegie Museum.jpg"),
   },
   {
     id: "2",
     name: "Phipps Conservatory",
     distance: "3.5 mi",
     liked: false,
+    image: require("../../assets/Phipps Conservatory.jpg"),
   },
 ];
 
@@ -65,10 +68,18 @@ export default function Home({ navigation }: any) {
     }
   };
 
-  const renderLocationCard = ({ item }: any) => (
-    <View style={styles.locationCard}>
+  const renderLocationCard = ({ item, index }: any) => (
+    <View style={[styles.locationCard, index === locations.length - 1 && { marginBottom: 0 }]}>
       <View style={[styles.imageContainer, { backgroundColor: item.id === "1" ? "#90EE90" : "#87CEEB" }]}>
-        <View style={styles.placeholderImage} />
+        {item.image ? (
+          <Image
+            source={item.image}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={styles.placeholderImage} />
+        )}
         <TouchableOpacity
           style={styles.likeButton}
           onPress={() => toggleLike(item.id)}
@@ -317,7 +328,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   flatListContent: {
-    paddingBottom: 20,
+    paddingBottom: 0,
   },
   locationCard: {
     marginBottom: 16,
@@ -329,6 +340,10 @@ const styles = StyleSheet.create({
     position: "relative",
     height: 160,
     backgroundColor: "#E0E0E0",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
   placeholderImage: {
     flex: 1,
