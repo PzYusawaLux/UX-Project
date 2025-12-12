@@ -1,41 +1,41 @@
-# React Native / Node
-node_modules/
-npm-debug.log
-yarn-error.log
-yarn-debug.log
-package-lock.json
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# Metro / Bundler
+# dependencies
+node_modules/
+
+# Expo
 .expo/
 dist/
-build/
-.bundle/
+web-build/
+expo-env.d.ts
 
-# Android build artifacts
-android/.gradle/
-android/app/build/
-android/build/
-android/.idea/
-android/local.properties
-android/.cxx/
-*.apk
-*.keystore
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
 
-# iOS build artifacts
-ios/Pods/
-ios/build/
-ios/DerivedData/
-*.xcworkspace
-*.xcuserstate
-*.xcuserdata
+# Metro
+.metro-health-check*
 
-# macOS system files
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
 .DS_Store
+*.pem
 
-# IDE / Editors
-.vscode/
-.idea/
-*.swp
+# local env files
+.env*.local
 
-# Environment files
-.env
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android
