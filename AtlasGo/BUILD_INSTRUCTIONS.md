@@ -51,78 +51,133 @@ eas build --platform android --profile preview
 
 6. Once finished, download link will be provided in the console
 
-### Method 3: Using Android Studio (For Development)
+### Method 3: Testing with Expo Go + Android Studio Emulator
 
-Android Studio allows you to view, test, and debug the React Native code during development.
+The easiest way to test the app during development using Expo Go.
 
-#### Setup Android Studio
+#### Prerequisites
 
 1. **Install Android Studio**
    - Download from https://developer.android.com/studio
    - Follow the installation wizard
    - Install Android SDK (at least API level 30)
 
-2. **Setup Android Emulator**
+2. **Create Android Emulator**
    - Open Android Studio > Device Manager
    - Click "Create Virtual Device"
-   - Select a device (e.g., Pixel 4)
-   - Choose a system image (e.g., Android 13)
-   - Click "Finish"
+   - Select a device (e.g., Pixel 9 Pro)
+   - Choose a system image (e.g., Android 14 or higher)
+   - Click "Finish" and start the emulator
 
-#### Getting the Code
+3. **Install Expo Go on the Emulator**
+   - Start the Android emulator
+   - Open Google Play Store
+   - Search for "Expo Go"
+   - Install the app
 
-**Make sure to use the `main` branch**
+#### Testing Steps
 
-1. **Clone the Repository**
+**Clone and Setup the Project:**
+
 ```bash
 git clone https://github.com/PzYusawaLux/UX-Project.git
 cd AtlasGo
 git checkout main
-```
-
-2. **Open Project in Android Studio**
-   - Open Android Studio
-   - Click "File" > "Open"
-   - Navigate to the `AtlasGo` folder
-   - Click "Open"
-   - Wait for Android Studio to sync the project (this may take a few minutes)
-
-3. **Install Node Dependencies**
-```bash
-# In terminal, make sure you're in the AtlasGo directory
 npm install
 ```
 
-4. **Start Development Server**
+**Start the Development Server:**
+
 ```bash
-# In the same terminal, start the Expo development server
-npm start
+npm run android
 ```
 
-#### Running the App in Android Studio
+This command will:
+1. Start Metro bundler (JavaScript bundler)
+2. Generate a QR code in the terminal
+3. Automatically open the app in your Android emulator via Expo Go
 
-**Option A: Via Expo CLI (Recommended)**
-- In your terminal where `npm start` is running, press `a` to automatically open the app on Android emulator
-- Android Studio will automatically detect the emulator
+**What You'll See:**
 
-**Option B: Manual Setup**
-1. In Android Studio, go to "Tools" > "Device Manager"
-2. Select your virtual device and click "Play" to start the emulator
-3. In your `npm start` terminal, press `a` to connect to the running emulator
+- Terminal shows: `Android Bundled [time]ms index.ts ([modules] modules)`
+- QR code appears for manual scanning
+- App loads in Expo Go on the emulator
 
-#### Using Android Studio Features for Development
+**Hot Reload During Development:**
 
-- **View/Edit Code**: Open any file in `src/` folder to view and edit React Native source code
-- **View Logs**: Open "Logcat" at bottom of Android Studio to see application logs and errors
-- **Run Debugger**: While app is running, go to "Tools" > "Debugger" > "Attach Debugger to Android Process"
-- **Test Different Devices**: Create multiple virtual devices in Device Manager to test on different screen sizes and Android versions
+While the app is running:
+- Edit any file in `src/` folder
+- Changes automatically reload in the emulator (usually within a few seconds)
+- Press `r` in terminal if manual reload is needed
+- Press `m` to toggle menu
+- Press `j` to open debugger
 
-#### Hot Reload During Development
+**Terminal Commands:**
 
-When you have the app running on the emulator:
-1. Edit any file in your source code
-2. The changes will automatically reload in the emulator (usually within a few seconds)
-3. If hot reload doesn't work, press `r` in the `npm start` terminal to manually reload
+```
+Press a │ open Android emulator
+Press r │ reload app
+Press j │ open debugger
+Press m │ toggle menu
+Press ? │ show all commands
+```
+
+---
+
+### Method 4: Download & Install on Real Android Phone
+
+#### Option A: Direct APK Download (if available)
+
+1. **On your Android phone:**
+   - Open file manager or browser
+   - Visit the download link provided by the project
+   - Download the APK file (atlas-go.apk)
+   - Open the file to install
+   - If prompted, enable "Unknown Sources" in Settings > Security
+
+2. **Installation:**
+   - Follow on-screen prompts
+   - App will be installed and ready to use
+
+#### Option B: Install from Emulator via QR Code
+
+1. **With development server running (`npm run android`):**
+   - Expo displays a QR code in the terminal
+   - On your real Android phone, open Expo Go app
+   - Tap "Scan QR code" button
+   - Scan the code shown in terminal
+   - App loads on your phone
+
+2. **Requirements:**
+   - Phone must be on same WiFi network as computer
+   - Expo Go app installed on phone
+
+#### Option C: Build Production APK (via EAS)
+
+```bash
+eas login  # Login to Expo account
+eas build --platform android --profile preview
+```
+
+- Wait 5-15 minutes for build to complete
+- EAS provides download link for final APK
+- Download and install on your phone
+
+---
+
+### Method 5: Development with Android Studio (Advanced)
+
+For viewing logs and debugging:
+
+1. **In Android Studio:**
+   - Open Tools > Logcat to view app logs
+   - See real-time error messages and output
+   - Build on top of the emulator setup from Method 3
+
+2. **Code Editing:**
+   - Edit files in `src/` folder
+   - Changes hot-reload automatically
+   - Use Android Studio's code editor features
 
 ## Project Information
 
