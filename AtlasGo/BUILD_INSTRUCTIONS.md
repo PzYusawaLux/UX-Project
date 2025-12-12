@@ -2,56 +2,7 @@
 
 ## Quick Installation
 
-### Method 1: Direct APK Download (Recommended)
-The latest build is ready to download and install directly.
-
-**Download Link:** https://expo.dev/artifacts/eas/nJgzp6bfh7Vcb7cWwe93RS.apk
-
-**Installation Steps:**
-1. Download the APK file on your Android device
-2. Open file manager and locate the downloaded APK
-3. Tap the APK file to install
-4. If prompted about "Unknown Sources", enable it in Settings > Security
-
-### Method 2: Build from Source Code
-
-**Important:** Make sure to clone the `main` branch
-
-**Prerequisites:**
-- Node.js 16 or higher
-- npm or yarn
-- Expo CLI (`npm install -g eas-cli`)
-- Expo account (https://expo.dev)
-
-**Build Steps:**
-
-1. Clone the repository from the main branch
-```bash
-git clone https://github.com/PzYusawaLux/UX-Project.git
-cd AtlasGo
-git checkout main
-```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Login to Expo account
-```bash
-eas login
-```
-
-4. Build APK
-```bash
-eas build --platform android --profile preview
-```
-
-5. Wait for build to complete (usually 5-15 minutes)
-
-6. Once finished, download link will be provided in the console
-
-### Method 3: Testing with Expo Go + Android Studio Emulator
+### Method 1: Testing with Expo Go + Android Studio Emulator
 
 The easiest way to test the app during development using Expo Go.
 
@@ -121,6 +72,57 @@ Press j │ open debugger
 Press m │ toggle menu
 Press ? │ show all commands
 ```
+
+---
+
+### Method 2: Direct APK Download (Recommended)
+The latest build is ready to download and install directly.
+
+**Download Link:** https://expo.dev/artifacts/eas/nJgzp6bfh7Vcb7cWwe93RS.apk
+
+**Installation Steps:**
+1. Download the APK file on your Android device
+2. Open file manager and locate the downloaded APK
+3. Tap the APK file to install
+4. If prompted about "Unknown Sources", enable it in Settings > Security
+
+### Method 3: Build from Source Code
+
+**Important:** Make sure to clone the `main` branch
+
+**Prerequisites:**
+- Node.js 16 or higher
+- npm or yarn
+- Expo CLI (`npm install -g eas-cli`)
+- Expo account (https://expo.dev)
+
+**Build Steps:**
+
+1. Clone the repository from the main branch
+```bash
+git clone https://github.com/PzYusawaLux/UX-Project.git
+cd AtlasGo
+git checkout main
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Login to Expo account
+```bash
+eas login
+```
+
+4. Build APK
+```bash
+eas build --platform android --profile preview
+```
+
+5. Wait for build to complete (usually 5-15 minutes)
+
+6. Once finished, download link will be provided in the console
 
 ---
 
